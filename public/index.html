@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToolMatch AI — Find the perfect AI tool for your job</title>
+  <meta name="description" content="Describe your job or task and instantly get the best AI tools, with step-by-step workflows. Powered by live web search.">
+  <meta property="og:title" content="ToolMatch AI">
+  <meta property="og:description" content="Tell us what you're trying to do. We find the exact AI tools for your job.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F9FAFB;
+      --surface: #FFFFFF;
+      --border: #E5E7EB;
+      --border-strong: #D1D5DB;
+      --text: #111827;
+      --text-secondary: #6B7280;
+      --text-tertiary: #9CA3AF;
+      --accent: #6366F1;
+      --accent-light: #EEF2FF;
+      --success: #059669;
+      --success-light: #ECFDF5;
+      --warning-light: #FFFBEB;
+      --warning: #D97706;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page { max-width: 680px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+    /* Header */
+    .header { margin-bottom: 2rem; }
+    .logo-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-mark { width: 36px; height: 36px; background: var(--text); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .logo-mark i { font-size: 18px; color: #fff; }
+    .logo-name { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
+    .live-pill { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 99px; background: var(--success-light); color: var(--success); border: 1px solid #A7F3D0; }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .tagline { font-size: 14px; color: var(--text-secondary); }
+
+    /* Input */
+    .input-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm); }
+    .input-row { display: flex; gap: 8px; }
+    textarea {
+      flex: 1; min-height: 80px; font-size: 14px; padding: 10px 12px;
+      border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: var(--bg); color: var(--text); resize: none;
+      font-family: 'Inter', sans-serif; line-height: 1.5; outline: none;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: var(--accent); }
+    textarea::placeholder { color: var(--text-tertiary); }
+    .submit-btn {
+      padding: 0 18px; border-radius: var(--radius-sm);
+      background: var(--text); color: #fff; border: none;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .submit-btn:hover { opacity: 0.88; }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* Chips */
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; }
+    .chip {
+      font-size: 12px; padding: 5px 11px; border-radius: 99px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text-secondary); cursor: pointer;
+      transition: all 0.12s;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+    /* Status bar */
+    .status-bar {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--text-secondary);
+      padding: 10px 14px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+    }
+    .status-bar i { font-size: 15px; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    .spinning { animation: spin 1s linear infinite; display: inline-block; }
+
+    /* Summary */
+    .summary { font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 6px; }
+    .summary i { font-size: 15px; flex-shrink: 0; margin-top: 2px; }
+
+    /* Tool cards */
+    .tool-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem;
+      margin-bottom: 0.875rem; box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.15s;
+    }
+    .tool-card:hover { box-shadow: var(--shadow-md); }
+    .tool-card.best { border: 2px solid var(--accent); }
+
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.75rem; gap: 12px; }
+    .tool-info { flex: 1; }
+    .tool-name { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+    .tool-role { font-size: 13px; color: var(--text-secondary); }
+    .card-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+    .badge-best { background: var(--accent-light); color: var(--accent); }
+    .badge-good { background: var(--warning-light); color: var(--warning); }
+    .pricing { font-size: 11px; color: var(--text-tertiary); }
+
+    .why { font-size: 13px; color: var(--text-secondary); line-height: 1.65; margin-bottom: 1rem; }
+
+    .steps-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+    .steps { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+    .step { display: flex; gap: 10px; align-items: flex-start; }
+    .step-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500; color: var(--text-secondary); flex-shrink: 0;
+    }
+    .step-text { font-size: 13px; color: var(--text); line-height: 1.5; padding-top: 2px; }
+
+    .try-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500; padding: 8px 16px;
+      border-radius: var(--radius-sm); background: var(--success-light);
+      color: var(--success); border: 1px solid #A7F3D0;
+      cursor: pointer; transition: all 0.15s; text-decoration: none;
+    }
+    .try-btn:hover { background: #D1FAE5; }
+    .try-btn i { font-size: 14px; }
+
+    /* Workflow card */
+    .workflow-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1rem 1.25rem;
+      margin-bottom: 0.875rem;
+    }
+    .workflow-title { font-size: 13px; font-weight: 500; margin-bottom: 0.625rem; display: flex; align-items: center; gap: 6px; }
+    .workflow-title i { font-size: 15px; color: var(--text-secondary); }
+    .workflow-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .flow-step {
+      font-size: 12px; padding: 4px 10px; border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border); color: var(--text);
+    }
+    .flow-arrow { font-size: 12px; color: var(--text-tertiary); }
+
+    /* Searches used */
+    .searches { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .searches-label { font-size: 11px; color: var(--text-tertiary); margin-bottom: 5px; }
+    .search-pills { display: flex; flex-wrap: wrap; gap: 5px; }
+    .search-pill {
+      font-size: 11px; padding: 3px 8px; border-radius: 99px;
+      border: 1px solid var(--border); color: var(--text-secondary);
+      background: var(--surface); display: flex; align-items: center; gap: 4px;
+    }
+    .search-pill i { font-size: 11px; }
+
+    /* Error */
+    .error-box {
+      background: #FEF2F2; border: 1px solid #FECACA;
+      border-radius: var(--radius-md); padding: 0.875rem 1rem;
+      font-size: 13px; color: #DC2626;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+    /* Footer */
+    .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-tertiary); }
+
+    @media (max-width: 480px) {
+      .page { padding: 1.25rem 1rem 3rem; }
+      .logo-name { font-size: 18px; }
+      .card-top { flex-direction: column; gap: 8px; }
+      .card-badges { flex-direction: row; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="logo-row">
+      <div class="logo">
+        <div class="logo-mark"><i class="ti ti-cpu"></i></div>
+        <span class="logo-name">ToolMatch AI</span>
+      </div>
+      <div class="live-pill"><span class="live-dot"></span> Live search</div>
+    </div>
+    <p class="tagline">Describe your job or task — get the exact AI tools and workflow for you, updated in real time.</p>
+  </header>
+
+  <div class="input-card">
+    <div class="input-row">
+      <textarea id="userInput" placeholder="e.g. I'm a real estate agent and I want to generate more leads and follow up with clients faster..." rows="3"></textarea>
+      <button class="submit-btn" id="submitBtn" onclick="getRecommendations()">
+        <i class="ti ti-arrow-right"></i> Find tools
+      </button>
+    </div>
+  </div>
+
+  <div class="chips" id="chips">
+    <span class="chip" onclick="fillChip(this)">I'm a marketer writing social content daily</span>
+    <span class="chip" onclick="fillChip(this)">I'm a developer writing and reviewing code</span>
+    <span class="chip" onclick="fillChip(this)">I run a small business and handle customer support</span>
+    <span class="chip" onclick="fillChip(this)">I'm a student writing research papers</span>
+    <span class="chip" onclick="fillChip(this)">I do video editing and want to speed things up</span>
+    <span class="chip" onclick="fillChip(this)">I'm a lawyer reviewing contracts</span>
+  </div>
+
+  <div id="output"></div>
+
+  <footer class="footer">
+    <p>ToolMatch AI searches the web before every recommendation — so you always get current tools, not outdated lists.</p>
+  </footer>
+
+</div>
+
+<script>
+  // =============================================
+  // AFFILIATE LINKS
+  // Replace YOUR_REF_ID with your actual affiliate
+  // ID for each program after signing up.
+  // If a tool has no affiliate program, the direct
+  // site URL is used instead.
+  // =============================================
+  const AFFILIATES = {
+    'jasper':           'https://jasper.ai/?fpr=YOUR_REF_ID',
+    'copy.ai':          'https://www.copy.ai/?via=YOUR_REF_ID',
+    'copyai':           'https://www.copy.ai/?via=YOUR_REF_ID',
+    'writesonic':       'https://writesonic.com/?via=YOUR_REF_ID',
+    'notion':           'https://affiliate.notion.so/YOUR_REF_ID',
+    'notion ai':        'https://affiliate.notion.so/YOUR_REF_ID',
+    'surfer':           'https://surferseo.com/?fp_ref=YOUR_REF_ID',
+    'surfer seo':       'https://surferseo.com/?fp_ref=YOUR_REF_ID',
+    'semrush':          'https://www.semrush.com/sem/?ref=YOUR_REF_ID',
+    'elevenlabs':       'https://try.elevenlabs.io/YOUR_REF_ID',
+    'descript':         'https://get.descript.com/YOUR_REF_ID',
+    'synthesia':        'https://www.synthesia.io/?via=YOUR_REF_ID',
+    'make':             'https://www.make.com/en/register?pc=YOUR_REF_ID',
+    'make.com':         'https://www.make.com/en/register?pc=YOUR_REF_ID',
+    'zapier':           'https://zapier.com',
+    'otter':            'https://otter.ai',
+    'otter.ai':         'https://otter.ai',
+    'loom':             'https://loom.com',
+    'grammarly':        'https://grammarly.com',
+    'canva':            'https://canva.com',
+    'midjourney':       'https://midjourney.com',
+    'runway':           'https://runwayml.com',
+    'chatgpt':          'https://chat.openai.com',
+    'claude':           'https://claude.ai',
+    'perplexity':       'https://perplexity.ai',
+    'cursor':           'https://cursor.com',
+    'github copilot':   'https://github.com/features/copilot',
+    'hubspot':          'https://hubspot.com',
+    'monday':           'https://monday.com',
+    'airtable':         'https://airtable.com',
+    'adobe firefly':    'https://firefly.adobe.com',
+    'firefly':          'https://firefly.adobe.com',
+    'sora':             'https://sora.com',
+    'gemini':           'https://gemini.google.com',
+    'mistral':          'https://mistral.ai',
+    'grok':             'https://x.ai',
+  };
+
+  function getAffiliateLink(toolName, websiteUrl) {
+    const lower = toolName.toLowerCase();
+    for (const [key, url] of Object.entries(AFFILIATES)) {
+      if (lower.includes(key) || lower === key) {
+        return url;
+      }
+    }
+    return websiteUrl || `https://www.google.com/search?q=${encodeURIComponent(toolName + ' AI tool')}`;
+  }
+
+  function hasAffiliate(toolName) {
+    const lower = toolName.toLowerCase();
+    for (const [key, url] of Object.entries(AFFILIATES)) {
+      if ((lower.includes(key) || lower === key) && url.includes('YOUR_REF_ID') === false && url.includes('REF') === false) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function fillChip(el) {
+    document.getElementById('userInput').value = el.textContent.trim();
+    document.getElementById('userInput').focus();
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function setStatus(icon, text, spinning) {
+    document.getElementById('output').innerHTML =
+      `<div class="status-bar"><i class="ti ti-${icon}${spinning ? ' spinning' : ''}"></i>${esc(text)}</div>`;
+  }
+
+  async function getRecommendations() {
+    const input = document.getElementById('userInput').value.trim();
+    if (!input) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+
+    setStatus('loader-2', 'Searching the web for the latest AI tools...', true);
+
+    try {
+      const res = await fetch('/api/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userInput: input })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        document.getElementById('output').innerHTML =
+          `<div class="error-box"><i class="ti ti-alert-circle"></i>${esc(data.error || 'Something went wrong. Please try again.')}</div>`;
+        btn.disabled = false;
+        return;
+      }
+
+      renderResult(data);
+    } catch (e) {
+      document.getElementById('output').innerHTML =
+        `<div class="error-box"><i class="ti ti-alert-circle"></i>Network error. Please check your connection and try again.</div>`;
+    }
+
+    btn.disabled = false;
+  }
+
+  function renderResult(data) {
+    let html = `<div class="divider"></div>`;
+
+    if (data.summary) {
+      html += `<div class="summary"><i class="ti ti-sparkles"></i><span>${esc(data.summary)}</span></div>`;
+    }
+
+    (data.tools || []).forEach((tool, i) => {
+      const isTop = tool.match === 'high';
+      const link = getAffiliateLink(tool.name, tool.website);
+      const btnLabel = tool.pricing && tool.pricing.toLowerCase().includes('free')
+        ? `Try ${esc(tool.name)} free`
+        : `Try ${esc(tool.name)}`;
+
+      html += `
+        <div class="tool-card ${isTop ? 'best' : ''}">
+          <div class="card-top">
+            <div class="tool-info">
+              <div class="tool-name">${esc(tool.name)}</div>
+              <div class="tool-role">${esc(tool.role || '')}</div>
+            </div>
+            <div class="card-badges">
+              <span class="badge ${isTop ? 'badge-best' : 'badge-good'}">${isTop ? 'Best match' : 'Also great'}</span>
+              ${tool.pricing ? `<span class="pricing">${esc(tool.pricing)}</span>` : ''}
+            </div>
+          </div>
+
+          <p class="why">${esc(tool.why || '')}</p>
+
+          <div class="steps-label">How to use it</div>
+          <div class="steps">
+            ${(tool.steps || []).map((s, i) =>
+              `<div class="step"><div class="step-num">${i+1}</div><div class="step-text">${esc(s)}</div></div>`
+            ).join('')}
+          </div>
+
+          <a class="try-btn" href="${esc(link)}" target="_blank" rel="noopener">
+            <i class="ti ti-external-link"></i> ${btnLabel} →
+          </a>
+        </div>`;
+    });
+
+    if (data.workflow?.steps?.length) {
+      html += `
+        <div class="workflow-card">
+          <div class="workflow-title"><i class="ti ti-route"></i>${esc(data.workflow.title || 'Recommended workflow')}</div>
+          <div class="workflow-flow">
+            ${data.workflow.steps.map((s, i, a) =>
+              `<span class="flow-step">${esc(s)}</span>${i < a.length - 1 ? '<span class="flow-arrow">→</span>' : ''}`
+            ).join('')}
+          </div>
+        </div>`;
+    }
+
+    if (data.searches?.length) {
+      html += `
+        <div class="searches">
+          <div class="searches-label">Searched live before recommending</div>
+          <div class="search-pills">
+            ${data.searches.map(q => `<span class="search-pill"><i class="ti ti-search"></i>${esc(q)}</span>`).join('')}
+          </div>
+        </div>`;
+    }
+
+    document.getElementById('output').innerHTML = html;
+  }
+
+  document.getElementById('userInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); getRecommendations(); }
+  });
+</script>
+</body>
+</html>
