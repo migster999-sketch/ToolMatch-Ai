@@ -86,8 +86,13 @@ module.exports = async (req, res) => {
       return res.status(500).json({ error: 'No response from AI. Please try again.' });
     }
 
-    const clean = textBlock.text.replace(/```json|```/g, '').trim();
-
+   const text = textBlock.text;
+const jsonMatch = text.match(/\{[\s\S]*\}/);
+if (!jsonMatch) {
+  console.error('No JSON found in response:', text.slice(0, 200));
+  return res.status(500).json({ error: 'AI returned an unexpected format. Please try again.' });
+}
+const clean = jsonMatch[0];
     let result;
     try {
       result = JSON.parse(clean);
